@@ -77,6 +77,10 @@ class AdminStates(StatesGroup):
     wait_product_item_line = State()   # "Name | folder | price [| flag]" for adding item to category
     wait_product_item_price = State()  # new price for item
 
+
+class UserStates(StatesGroup):
+    wait_topup_amount = State()
+
 # All admin states for filtering
 _ADMIN_STATES = [
     AdminStates.wait_user_id,
@@ -1166,30 +1170,45 @@ def register_handlers(dp: Dispatcher, bot: Bot):
             [InlineKeyboardButton(text="Rules", callback_data="rules")],
             [InlineKeyboardButton(text="Help", callback_data="help")]
         ])
-        await message.answer(f"Name: {message.from_user.full_name}\n💰 Balance: {balance}$", reply_markup=kb)
+        await message.answer(f"Name: {message.from_user.full_name}\nBalance: {balance}$", reply_markup=kb)
 
     @dp.callback_query(F.data == "topup")
-    async def topup_start(callback: types.CallbackQuery):
+    async def topup_start(callback: types.CallbackQuery, state: FSMContext):
         if not await require_subscription_for_callback(bot, callback):
             return
-        await callback.message.answer("💸 Send the top-up amount:")
+        await state.set_state(UserStates.wait_topup_amount)
+        await callback.message.answer(
+            "Send the top-up amount in $ :\n"
+            "(example: '25')"
+        )
         await safe_callback_answer(callback)
 
-    @dp.message(lambda m: m.text and m.text.isdigit())
-    async def handle_amount(message: Message):
+    @dp.message(UserStates.wait_topup_amount)
+    async def handle_amount(message: Message, state: FSMContext):
         if not await require_subscription_for_message(bot, message):
             return
-        amount = int(message.text)
-        if amount <= 0:
-            await message.answer("❌ Amount must be positive.")
+        text = (message.text or "").strip()
+        if not text.isdigit():
+            await message.answer("Send the amount as a whole number in USD, for example: 10")
             return
+
+        amount = int(text)
+        if amount <= 0:
+            await message.answer("Amount must be positive.")
+            return
+
         url = create_crypto_invoice(message.from_user.id, amount)
         if url:
-            btn = InlineKeyboardButton(text="💳 Proceed to payment", url=url)
+            await state.clear()
+            btn = InlineKeyboardButton(text="Proceed to payment", url=url)
             markup = InlineKeyboardMarkup(inline_keyboard=[[btn]])
-            await message.answer(f"Amount: {amount}$\nClick the button below to pay via CryptoBot:", reply_markup=markup)
+            await message.answer(
+                f"Amount: {amount}$\n"
+                "Click the button below to pay via CryptoBot.\n",
+                reply_markup=markup
+            )
         else:
-            await message.answer("❌ Failed to create invoice. Try again later.")
+            await message.answer("Failed to create invoice. Try again later.")
 
     @dp.callback_query(F.data == "rules")
     async def rules(callback: types.CallbackQuery):
