@@ -1,0 +1,82 @@
+{
+    "categories": {
+        "FB Marketplace": {
+            "folder": "fb_marketplace",
+            "price": 5
+        },
+        "eBay": {
+            "folder": "ebay",
+            "price": 20
+        },
+        "Kleinanzeigen": {
+            "folder": "kleinanzeigen",
+            "price": 8
+        },
+        "Etsy": {
+            "folder": "etsy",
+            "price": 10
+        },
+        "Vinted": {
+            "folder": "vinted",
+            "price": 20
+        },
+        "Wallapop": {
+            "folder": "wallapop",
+            "price": 20
+        }
+    },
+    "proxies": {
+        "SOCKS5 Germany": {
+            "folder": "proxy_de",
+            "price": 3,
+            "flag": "🇩🇪"
+        },
+        "SOCKS5 Canada": {
+            "folder": "proxy_ca",
+            "price": 3,
+            "flag": "🇨🇦"
+        },
+        "SOCKS5 Hungary": {
+            "folder": "proxy_hu",
+            "price": 3,
+            "flag": "🇭🇺"
+        },
+        "SOCKS5 USA": {
+            "folder": "proxy_us",
+            "price": 3,
+            "flag": "🇺🇸"
+        },
+        "SOCKS5 Singapore": {
+            "folder": "proxy_sg",
+            "price": 3,
+            "flag": "🇸🇬"
+        }
+    },
+    "product_categories": {
+        "BANK LOGS 💳": {
+            "icon": "💳",
+            "items": {
+                "Postbank [2900€] DEBET": {
+                    "folder": "postbank2900",
+                    "price": 75
+                },
+                "Postbank [1750€] DEBET": {
+                    "folder": "postbank1750",
+                    "price": 55
+                },
+                "Postbank [3500€] DEBET": {
+                    "folder": "postbank3500",
+                    "price": 90
+                },
+                "Postbank [6500€] DEBET": {
+                    "folder": "postbank6500",
+                    "price": 125
+                },
+                "Postbank [8000€] DEBET": {
+                    "folder": "postbank8500",
+                    "price": 145
+                }
+            }
+        }
+    }
+}
